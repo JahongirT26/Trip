@@ -6,6 +6,36 @@ import Tariff from './Tariff'
 
 function TicketsPage({shownTickets, shift, setShift, maxShift}) {
     const [activePage, setActivePage] = useState('calendar')
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [selectTariff, setSelectTariff] = useState('economy');
+    const selectedDateTickets = shownTickets.find(({date}) => (date === selectedDate))
+    
+    const getContent = (activePage) => {
+        switch (activePage) {
+                case 'calendar':
+                    return ( 
+                        <Calendar
+                            selectedDate={selectedDate}
+                            setSelectedDate={setSelectedDate}
+                            maxShift={maxShift}
+                            shift={shift}
+                            setShift={setShift}
+                            shownTickets={shownTickets} 
+                        />
+                    );
+                case 'tariff':
+                    return (
+                        <Tariff
+                            selected={selectedDateTickets}
+                            shownTickets={shownTickets}
+                            selectTariff={selectTariff}
+                            onSelectTariff={setSelectTariff}
+                        />
+                    );
+                default: 
+                    return <div>404</div>
+        }
+    }
     return (
         <Container>
             <section className="pt-5 grow">
@@ -26,6 +56,7 @@ function TicketsPage({shownTickets, shift, setShift, maxShift}) {
                             )}>Таблица цен
                     </button></li>
                     <li><button
+                                disabled={!selectedDate}
                                 onClick={() => setActivePage("tariff")}
                                 className={clsx(
                                     "w-55 py-2.5 text-[16px] border cursor-pointer",
@@ -35,13 +66,7 @@ function TicketsPage({shownTickets, shift, setShift, maxShift}) {
                                 )}>Сравнение цен
                     </button></li>
                 </ul>
-            <Calendar 
-                maxShift={maxShift}
-                shift={shift}
-                setShift={setShift}
-                shownTickets={shownTickets} 
-            />
-            <Tariff />
+            {getContent(activePage)}
             </section>
         </Container>
     )

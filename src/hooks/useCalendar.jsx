@@ -8,10 +8,7 @@ function useCalendar(tickets) {
     })
     
     const DAYSHOW = 5
-    const shownTickets = cortedTickets.slice(
-        Math.max((shift),0 ),
-        DAYSHOW + shift
-    )
+    const shownTickets = cortedTickets.slice(shift, DAYSHOW + shift)
     
     const maxShift = tickets.length - DAYSHOW;
     return (
