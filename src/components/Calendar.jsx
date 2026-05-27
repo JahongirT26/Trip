@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import clsx from 'clsx'
 import awworLeft from '../assets/image/arrow-left.svg'
 import awworRight from '../assets/image/arrow-right.svg'
@@ -7,8 +6,7 @@ import { formatPrice } from '../utils/formatPrice'
 import { formatWeekday } from '../utils/formatWeekday'
 import { isWeekend } from '../utils/isWeekend'
 
-function Calendar({shownTickets, shift, setShift, maxShift}) {
-    const [selectedDate, setSelectedDate] = useState(null)
+function Calendar({shownTickets, shift, setShift, maxShift, selectedDate, setSelectedDate}) {
     return (
         <div>
             <div className="w-md mx-auto mb-3.75 flex justify-end gap-1.25">

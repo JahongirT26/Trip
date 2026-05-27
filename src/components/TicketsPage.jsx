@@ -3,9 +3,41 @@ import clsx from "clsx"
 import Calendar from './Calendar'
 import Container from './Container'
 import Tariff from './Tariff'
+import { APP_ROUTE } from '../constants/routes'
 
-function TicketsPage({shownTickets, shift, setShift, maxShift}) {
-    const [activePage, setActivePage] = useState('calendar')
+
+function TicketsPage({shownTickets, shift, setShift, maxShift, tickets}) {
+    const [activePage, setActivePage] = useState(APP_ROUTE.CALENDAR)
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [selectTariff, setSelectTariff] = useState('economy');
+    const selectedDateTickets = tickets.find(({date}) => (date === selectedDate))
+    
+    const getContent = (activePage) => {
+        switch (activePage) {
+                case APP_ROUTE.CALENDAR:
+                    return ( 
+                        <Calendar
+                            selectedDate={selectedDate}
+                            setSelectedDate={setSelectedDate}
+                            maxShift={maxShift}
+                            shift={shift}
+                            setShift={setShift}
+                            shownTickets={shownTickets} 
+                        />
+                    );
+                case APP_ROUTE.TARIFF:
+                    return (
+                        <Tariff
+                            selected={selectedDateTickets}
+                            shownTickets={shownTickets}
+                            selectTariff={selectTariff}
+                            onSelectTariff={setSelectTariff}
+                        />
+                    );
+                default: 
+                    return <div>404</div>
+        }
+    }
     return (
         <Container>
             <section className="pt-5 grow">
@@ -17,31 +49,26 @@ function TicketsPage({shownTickets, shift, setShift, maxShift}) {
                 </h1>
                 <ul className="flex justify-center mb-6.25">
                     <li><button 
-                            onClick={() => setActivePage("calendar")}
+                            onClick={() => setActivePage(APP_ROUTE.CALENDAR)}
                             className={clsx(
                                 "w-55 py-2.5   text-[16px] border cursor-pointer",
                                 'disabled:opacity-50',
                                 'disabled:cursor-default',
-                                activePage === 'calendar' ? "text-white bg-[#015c65]" :"text-[#015c65] bg-white"
+                                activePage === APP_ROUTE.CALENDAR ? "text-white bg-[#015c65]" :"text-[#015c65] bg-white"
                             )}>Таблица цен
                     </button></li>
                     <li><button
-                                onClick={() => setActivePage("tariff")}
+                                disabled={!selectedDate}
+                                onClick={() => setActivePage(APP_ROUTE.TARIFF)}
                                 className={clsx(
                                     "w-55 py-2.5 text-[16px] border cursor-pointer",
                                     'disabled:opacity-50',
                                     'disabled:cursor-default',
-                                    activePage === 'tariff' ? "text-white bg-[#015c65]" :"text-[#015c65] bg-white"
+                                    activePage === APP_ROUTE.TARIFF ? "text-white bg-[#015c65]" :"text-[#015c65] bg-white"
                                 )}>Сравнение цен
                     </button></li>
                 </ul>
-            <Calendar 
-                maxShift={maxShift}
-                shift={shift}
-                setShift={setShift}
-                shownTickets={shownTickets} 
-            />
-            <Tariff />
+            {getContent(activePage)}
             </section>
         </Container>
     )
