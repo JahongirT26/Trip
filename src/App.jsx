@@ -18,6 +18,7 @@ function App() {
       <Header/>
       <main className='grow'>
         <TicketsPage
+          tickets={tickets}
           maxShift={maxShift}
           shift={shift}
           setShift={setShift}
